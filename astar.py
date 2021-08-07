@@ -24,8 +24,8 @@ class Spot:
         self.row = row
         self.col = col
         self.width = width
-        self.x = row * self.width
-        self.y = col * self.width
+        self.x = col * self.width
+        self.y = row * self.width
         self.color = WHITE
         self.total_rows = total_rows
         self.total_columns = total_columns
@@ -173,11 +173,10 @@ def draw_grid(win, rows, columns, width, height):
 
 
 def draw_barrier(win, grid, rows, columns):
-    # grid[0][1].make_barrier()
-    # grid[0][1].draw(win)
-    for spot in grid[0]:
-        spot.make_barrier()
-        spot.draw(win)
+    for row in rows:
+        for spot in grid[row]:
+            spot.make_barrier()
+            spot.draw(win)
     
 
 def draw(win, grid, rows, columns, width, height):
@@ -193,7 +192,7 @@ def draw(win, grid, rows, columns, width, height):
 
 def get_clicked_position(pos, rows, columns, width, height):
     gap = width // columns
-    y, x = pos
+    x, y = pos
     row = y // gap
     col = x // gap
     return row, col
@@ -210,7 +209,7 @@ def main(win, width, height):
     run = True
     started = False
     
-    barrier_rows = ROWS
+    barrier_rows = [0,ROWS-1]
     barrier_columns = [0, COLUMNUS-1]
     
     draw_barrier(win, grid, barrier_rows, barrier_columns)
