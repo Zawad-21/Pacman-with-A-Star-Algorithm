@@ -78,15 +78,15 @@ class Spot:
         # down
         if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier():
             self.neighbors.append(grid[self.row + 1][self.col])
-
-        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():  # up
+        # up
+        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier():  
             self.neighbors.append(grid[self.row - 1][self.col])
 
-        # riht
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier():
+        # right
+        if self.col < self.total_columns - 1 and not grid[self.row][self.col + 1].is_barrier():
             self.neighbors.append(grid[self.row][self.col + 1])
-
-        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier():  # left
+        # left
+        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier():
             self.neighbors.append(grid[self.row][self.col - 1])
 
     def __lt__(self, other):
@@ -151,7 +151,7 @@ def algorithm(draw, grid, start, end):
             
     return False
 
-
+#adding spots to to the row and adding rows to the
 def make_grid(rows, columns, width, height):
     grid = []
     gap = width // columns
@@ -175,14 +175,9 @@ def draw_grid(win, rows, columns, width, height):
 def draw_barrier(win, grid, rows, columns):
     # grid[0][1].make_barrier()
     # grid[0][1].draw(win)
-    # temp = 0
-    # for i in range(rows):
-    #     grid[0][temp].make_barrier()
-    #     grid[0][temp].draw(win)
-    #     temp = temp + rows
-    #     print(temp)
-    pass
-        
+    for spot in grid[0]:
+        spot.make_barrier()
+        spot.draw(win)
     
 
 def draw(win, grid, rows, columns, width, height):
