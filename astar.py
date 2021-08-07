@@ -225,12 +225,12 @@ def main(win, width, height):
     
     pacman = grid[8][8]
     
-    if not start:
-                    # start = spot
-                    # start.make_start()
-                    for ghost in ghosts:
-                        ghost.make_start()
-                        print(ghost)
+    for ghost in ghosts:
+        ghost.make_start()
+        print(ghost)
+    
+    end = pacman
+    end.make_end()
     
     while run:
         draw(win, grid, ROWS, COLUMNUS, width, height)
@@ -240,28 +240,6 @@ def main(win, width, height):
 
             if started:
                 continue
-
-            if pygame.mouse.get_pressed()[0]:  # left mouse
-                # pos = pygame.mouse.get_pos()
-                # row, col = get_clicked_position(pos, ROWS, COLUMNUS, width, height)
-                
-
-                elif not end and spot != start:
-                    end = pacman
-                    end.make_end()
-
-                elif spot != end and spot != start:
-                    spot.make_barrier()
-
-            # elif pygame.mouse.get_pressed()[2]:  # right mouse
-            #     pos = pygame.mouse.get_pos()
-            #     row, col = get_clicked_position(pos, ROWS, COLUMNUS, width, height)
-            #     spot = grid[row][col]
-            #     spot.reset()
-            #     if spot == start:
-            #         start = None
-            #     if spot == end:
-            #         end = None
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not started:
