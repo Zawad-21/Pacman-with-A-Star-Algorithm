@@ -163,20 +163,28 @@ def make_grid(rows, columns, width, height):
     return grid
 
 
-def draw_grid(win, rows, columns, width, height):
-    row_gap = height // rows
-    column_gap = width // columns
-    for i in range(rows):
-        pygame.draw.line(win, GREY, (0, i * row_gap), (width, i * row_gap))
-        for j in range(columns):
-            pygame.draw.line(win, GREY, (j * column_gap, 0), (j * column_gap, height))
+# def draw_grid(win, rows, columns, width, height):
+    # row_gap = height // rows
+    # column_gap = width // columns
+    # for i in range(rows):
+    #     pygame.draw.line(win, GREY, (0, i * row_gap), (width, i * row_gap))
+    #     for j in range(columns):
+    #         pygame.draw.line(win, GREY, (j * column_gap, 0), (j * column_gap, height))
 
 
-def draw_barrier(win, grid, rows, columns):
+def draw_barrier(win, grid, rows, columns, total_rows):
+    #drawing horizontal barriers
     for row in rows:
         for spot in grid[row]:
             spot.make_barrier()
             spot.draw(win)
+    #drawing vertical barriers
+    for column in columns:
+        for row in range(total_rows):
+            spot = grid[row][column]
+            spot.make_barrier()
+            spot.draw(win)
+    
     
 
 def draw(win, grid, rows, columns, width, height):
@@ -186,7 +194,6 @@ def draw(win, grid, rows, columns, width, height):
         for spot in row:
             spot.draw(win)
 
-    draw_grid(win, rows, columns, width, height)
     pygame.display.update()
 
 
@@ -212,7 +219,18 @@ def main(win, width, height):
     barrier_rows = [0,ROWS-1]
     barrier_columns = [0, COLUMNUS-1]
     
-    draw_barrier(win, grid, barrier_rows, barrier_columns)
+    draw_barrier(win, grid, barrier_rows, barrier_columns, ROWS)
+    
+    ghosts = [grid[5][5], grid[5][9], grid[5][7]]
+    
+    pacman = grid[8][8]
+    
+    if not start:
+                    # start = spot
+                    # start.make_start()
+                    for ghost in ghosts:
+                        ghost.make_start()
+                        print(ghost)
     
     while run:
         draw(win, grid, ROWS, COLUMNUS, width, height)
@@ -224,38 +242,35 @@ def main(win, width, height):
                 continue
 
             if pygame.mouse.get_pressed()[0]:  # left mouse
-                pos = pygame.mouse.get_pos()
-                row, col = get_clicked_position(pos, ROWS, COLUMNUS, width, height)
-                spot = grid[row][col]
-                if not start and spot != end:
-                    start = spot
-                    start.make_start()
+                # pos = pygame.mouse.get_pos()
+                # row, col = get_clicked_position(pos, ROWS, COLUMNUS, width, height)
+                
 
                 elif not end and spot != start:
-                    end = spot
+                    end = pacman
                     end.make_end()
 
                 elif spot != end and spot != start:
                     spot.make_barrier()
 
-            elif pygame.mouse.get_pressed()[2]:  # right mouse
-                pos = pygame.mouse.get_pos()
-                row, col = get_clicked_position(pos, ROWS, COLUMNUS, width, height)
-                spot = grid[row][col]
-                spot.reset()
-                if spot == start:
-                    start = None
-                if spot == end:
-                    end = None
+            # elif pygame.mouse.get_pressed()[2]:  # right mouse
+            #     pos = pygame.mouse.get_pos()
+            #     row, col = get_clicked_position(pos, ROWS, COLUMNUS, width, height)
+            #     spot = grid[row][col]
+            #     spot.reset()
+            #     if spot == start:
+            #         start = None
+            #     if spot == end:
+            #         end = None
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and not started:
                     for row in grid:
                         for spot in row:
                             spot.update_neighbors(grid)
-
-                    algorithm(lambda: draw(win, grid, ROWS, COLUMNUS, width, height),
-                              grid, start, end)
+                    for ghost in ghosts:
+                        algorithm(lambda: draw(win, grid, ROWS, COLUMNUS, width, height),
+                                grid, ghost, pacman)
 
     pygame.quit()
 
